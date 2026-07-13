@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>QuickAdd</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='quickadd.css') }}">
+</head>
+<body>
+    <main>
+        <form method="post" id="quickAddForm" action="{{ add_user_url }}">
+            <input type="hidden" name="workflow_id" value="{{ workflow_id }}">
+            <input type="hidden" name="orgUnitId" value="{{ org_unit_id }}">
+
+            <label for="username">Username</label>
+            <input
+                type="text"
+                id="username"
+                required
+                placeholder="Enter username"
+                name="username"
+                autocomplete="off"
+            >
+
+            <label for="userrole">Role</label>
+            <select id="userrole" required name="userrole">
+                <option value="" disabled selected>Select Role</option>
+                {% for role in role_options %}
+                    <option value="{{ role.id }}">{{ role.label }}</option>
+                {% endfor %}
+            </select>
+
+            <div class="actions">
+                <button type="submit" id="quickAddButton">Add</button>
+                <div id="quickAddSpinner" aria-hidden="true"></div>
+            </div>
+        </form>
+        <div id="quickAddResponse" tabindex="-1" aria-live="polite"></div>
+    </main>
+    <script src="{{ url_for('static', filename='quickadd.js') }}"></script>
+</body>
+</html>

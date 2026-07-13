@@ -1,0 +1,19 @@
+{
+  "https://YOUR_BRIGHTSPACE_DOMAIN": [
+    {
+      "default": true,
+      "client_id": "PASTE_LTI_CLIENT_ID_HERE",
+      "auth_login_url": "https://YOUR_BRIGHTSPACE_DOMAIN/d2l/lti/auth/api/login",
+      "auth_token_url": "https://auth.brightspace.com/core/connect/token",
+      "auth_audience": null,
+      "key_set_url": "https://YOUR_BRIGHTSPACE_DOMAIN/d2l/.well-known/jwks",
+      "key_set": null,
+      "private_key_file": "keys/private.key",
+      "public_key_file": "keys/public.key",
+      "deployment_ids": [
+        "PASTE_QUICKADD_DEPLOYMENT_ID_HERE",
+        "PASTE_ACTIVATE_COURSE_DEPLOYMENT_ID_HERE"
+      ]
+    }
+  ]
+}
