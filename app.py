@@ -17,7 +17,7 @@ from quickadd import QuickAddError, add_user_to_course_and_sections
 load_dotenv()
 
 SECRET_KEY = os.getenv("FLASK_SECRET_KEY")
-APP_FOLDER = os.getenv("APP_FOLDER", "quickadd-activate")
+APP_FOLDER = os.getenv("APP_FOLDER")
 APP_URL_PREFIX = os.getenv("APP_URL_PREFIX") or (f"/{APP_FOLDER}" if APP_FOLDER else "")
 CACHE_DIR = os.getenv("FLASK_CACHE_DIR") or f"/tmp/{APP_FOLDER}-flask-cache"
 QUICKADD_DEPLOYMENT_ID = os.getenv("QUICKADD_DEPLOYMENT_ID")
