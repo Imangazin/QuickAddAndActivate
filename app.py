@@ -180,6 +180,8 @@ def login():
     if not target_link_uri:
         return launch_error('Missing "target_link_uri" param')
 
+    session["lti_login_started"] = uuid.uuid4().hex
+
     oidc_login = FlaskOIDCLogin(
         flask_request,
         tool_conf,
