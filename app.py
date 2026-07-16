@@ -31,23 +31,25 @@ QUICKADD_ROLE_OPTIONS = os.getenv(
 os.makedirs(CACHE_DIR, exist_ok=True)
 
 
+def add_partitioned_attribute_to_cookies(response):
+    cookies = response.headers.getlist("Set-Cookie")
+    if not cookies:
+        return
+
+    response.headers.remove("Set-Cookie")
+    for cookie in cookies:
+        lower_cookie = cookie.lower()
+        if "partitioned" not in lower_cookie:
+            if "secure" not in lower_cookie:
+                cookie = cookie + "; Secure"
+            cookie = cookie + "; Partitioned"
+        response.headers.add("Set-Cookie", cookie)
+
+
 class PartitionedSessionInterface(SecureCookieSessionInterface):
     def save_session(self, app, session, response):
         super().save_session(app, session, response)
-
-        session_cookie_name = app.config.get("SESSION_COOKIE_NAME")
-        cookies = response.headers.getlist("Set-Cookie")
-        if not session_cookie_name or not cookies:
-            return
-
-        response.headers.remove("Set-Cookie")
-        for cookie in cookies:
-            if (
-                cookie.startswith(session_cookie_name + "=")
-                and "partitioned" not in cookie.lower()
-            ):
-                cookie = cookie + "; Partitioned"
-            response.headers.add("Set-Cookie", cookie)
+        add_partitioned_attribute_to_cookies(response)
 
 
 app = Flask(__name__)
@@ -73,6 +75,12 @@ tool_conf = ToolConfJsonFile(os.path.join(BASE_DIR, "tool_config.json"))
 WORKFLOW_CACHE_PREFIX = "quickadd-workflow:"
 DEPLOYMENT_ID_CLAIM = "https://purl.imsglobal.org/spec/lti/claim/deployment_id"
 CONTEXT_CLAIM = "https://purl.imsglobal.org/spec/lti/claim/context"
+
+
+@app.after_request
+def add_partitioned_cookie_attribute(response):
+    add_partitioned_attribute_to_cookies(response)
+    return response
 
 
 def get_launch_data_storage():
