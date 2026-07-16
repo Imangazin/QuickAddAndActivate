@@ -185,7 +185,7 @@ def login():
         tool_conf,
         launch_data_storage=get_launch_data_storage(),
     )
-    return oidc_login.enable_check_cookies().redirect(target_link_uri)
+    return oidc_login.redirect(target_link_uri)
 
 
 @app.route("/launch/", methods=["POST"])
