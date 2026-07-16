@@ -42,6 +42,8 @@ def add_partitioned_attribute_to_cookies(response):
         if "partitioned" not in lower_cookie:
             if "secure" not in lower_cookie:
                 cookie = cookie + "; Secure"
+            if "samesite=" not in lower_cookie:
+                cookie = cookie + "; SameSite=None"
             cookie = cookie + "; Partitioned"
         response.headers.add("Set-Cookie", cookie)
 
