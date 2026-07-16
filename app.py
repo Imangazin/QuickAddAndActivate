@@ -20,6 +20,7 @@ load_dotenv()
 SECRET_KEY = os.getenv("FLASK_SECRET_KEY")
 APP_FOLDER = os.getenv("APP_FOLDER")
 APP_URL_PREFIX = os.getenv("APP_URL_PREFIX") or (f"/{APP_FOLDER}" if APP_FOLDER else "")
+COOKIE_PATH = APP_URL_PREFIX.rstrip("/") + "/" if APP_URL_PREFIX else "/"
 CACHE_DIR = os.getenv("FLASK_CACHE_DIR") or f"/tmp/{APP_FOLDER}-flask-cache"
 QUICKADD_DEPLOYMENT_ID = os.getenv("QUICKADD_DEPLOYMENT_ID")
 ACTIVATE_COURSE_DEPLOYMENT_ID = os.getenv("ACTIVATE_COURSE_DEPLOYMENT_ID")
@@ -29,6 +30,24 @@ QUICKADD_ROLE_OPTIONS = os.getenv(
 )
 
 os.makedirs(CACHE_DIR, exist_ok=True)
+
+
+def set_cookie_path(cookie):
+    parts = [part.strip() for part in cookie.split(";")]
+    has_path = False
+    updated_parts = []
+
+    for part in parts:
+        if part.lower().startswith("path="):
+            updated_parts.append(f"Path={COOKIE_PATH}")
+            has_path = True
+        else:
+            updated_parts.append(part)
+
+    if not has_path:
+        updated_parts.append(f"Path={COOKIE_PATH}")
+
+    return "; ".join(updated_parts)
 
 
 def add_partitioned_attribute_to_cookies(response):
@@ -45,6 +64,7 @@ def add_partitioned_attribute_to_cookies(response):
             if "samesite=" not in lower_cookie:
                 cookie = cookie + "; SameSite=None"
             cookie = cookie + "; Partitioned"
+        cookie = set_cookie_path(cookie)
         response.headers.add("Set-Cookie", cookie)
 
 
@@ -64,7 +84,9 @@ app.config.from_mapping(
     CACHE_DEFAULT_TIMEOUT=600,
     CACHE_DIR=CACHE_DIR,
     SECRET_KEY=SECRET_KEY,
+    APPLICATION_ROOT=APP_URL_PREFIX or "/",
     SESSION_COOKIE_NAME=f"{APP_FOLDER}-lti13-sessionid",
+    SESSION_COOKIE_PATH=COOKIE_PATH,
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SECURE=True,
     SESSION_COOKIE_SAMESITE="None",
