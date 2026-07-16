@@ -3,6 +3,7 @@ import uuid
 
 from dotenv import load_dotenv
 from flask import Flask, jsonify, render_template, request, session
+from flask.sessions import SecureCookieSessionInterface
 from flask_caching import Cache
 from pylti1p3.contrib.flask import FlaskCacheDataStorage, FlaskMessageLaunch
 from pylti1p3.contrib.flask import FlaskOIDCLogin
@@ -29,7 +30,28 @@ QUICKADD_ROLE_OPTIONS = os.getenv(
 
 os.makedirs(CACHE_DIR, exist_ok=True)
 
+
+class PartitionedSessionInterface(SecureCookieSessionInterface):
+    def save_session(self, app, session, response):
+        super().save_session(app, session, response)
+
+        session_cookie_name = app.config.get("SESSION_COOKIE_NAME")
+        cookies = response.headers.getlist("Set-Cookie")
+        if not session_cookie_name or not cookies:
+            return
+
+        response.headers.remove("Set-Cookie")
+        for cookie in cookies:
+            if (
+                cookie.startswith(session_cookie_name + "=")
+                and "partitioned" not in cookie.lower()
+            ):
+                cookie = cookie + "; Partitioned"
+            response.headers.add("Set-Cookie", cookie)
+
+
 app = Flask(__name__)
+app.session_interface = PartitionedSessionInterface()
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1, x_prefix=1)
 app.secret_key = SECRET_KEY
 app.config.from_mapping(
