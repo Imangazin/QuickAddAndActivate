@@ -16,7 +16,11 @@
 
     function showMessage(success, message) {
         feedback.className = success ? "message-success" : "message-error";
-        feedback.textContent = message;
+        if (success) {
+            feedback.innerHTML = message;
+        } else {
+            feedback.textContent = message;
+        }
         feedback.focus();
     }
 

@@ -13,6 +13,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 from activate_course import ActivateCourseError, activate_or_deactivate_course
 from auth2 import get_access_token
+from brightspace_api import BRIGHTSPACE_BASE_URL
 from quickadd import QuickAddError, add_user_to_course_and_sections
 
 load_dotenv()
@@ -179,6 +180,17 @@ def launch_error(message: str, status_code: int = 400):
     return jsonify({"success": False, "message": message}), status_code
 
 
+def quickadd_success_message(org_unit_id):
+    brightspace_base_url = (BRIGHTSPACE_BASE_URL or "").rstrip("/")
+    sections_url = (
+        f"{brightspace_base_url}/d2l/lms/group/section_list.d2l?ou={org_unit_id}"
+    )
+    return (
+        "User successfully added to all course "
+        f"<a href='{sections_url}' target='_parent'>Sections</a>"
+    )
+
+
 @app.route("/")
 def index():
     return "QuickAdd and ActivateCourse LTI 1.3 tool is running."
@@ -260,14 +272,7 @@ def quickadd_add_user():
             workflow["access_token"],
         )
         if result["user_is_active"]:
-            message = (
-                "User {username} has been added to course offering {org_unit_id} "
-                "and {section_count} section(s)."
-            ).format(
-                username=result["username"],
-                org_unit_id=workflow["org_unit_id"],
-                section_count=result["section_count"],
-            )
+            message = quickadd_success_message(workflow["org_unit_id"])
         else:
             message = (
                 "User {username} has been added, but the user account is inactive."
