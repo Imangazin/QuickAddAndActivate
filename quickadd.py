@@ -36,10 +36,9 @@ def enroll_user_in_course(
         "OrgUnitId": int(org_unit_id),
         "UserId": int(user_id),
         "RoleId": int(role_id),
+        "SendEnrollmentEmail": True,
     }
     path = f"/d2l/api/lp/{BRIGHTSPACE_LP_API_VERSION}/enrollments/"
-    print("QuickAdd enrollment POST path:", path)
-    print("QuickAdd enrollment POST payload:", payload)
     return request(
         "POST",
         path,
