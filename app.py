@@ -32,22 +32,41 @@ QUICKADD_ROLE_OPTIONS = os.getenv(
 os.makedirs(CACHE_DIR, exist_ok=True)
 
 
-def set_cookie_path(cookie):
-    parts = [part.strip() for part in cookie.split(";")]
+def normalize_cookie_for_iframe(cookie):
+    parts = [part.strip() for part in cookie.split(";") if part.strip()]
     has_path = False
-    updated_parts = []
+    has_secure = False
+    has_samesite = False
+    has_partitioned = False
+    normalized_parts = []
 
     for part in parts:
-        if part.lower().startswith("path="):
-            updated_parts.append(f"Path={COOKIE_PATH}")
+        lower_part = part.lower()
+        if lower_part.startswith("path="):
+            normalized_parts.append(f"Path={COOKIE_PATH}")
             has_path = True
+        elif lower_part == "secure":
+            normalized_parts.append(part)
+            has_secure = True
+        elif lower_part.startswith("samesite="):
+            normalized_parts.append("SameSite=None")
+            has_samesite = True
+        elif lower_part == "partitioned":
+            normalized_parts.append(part)
+            has_partitioned = True
         else:
-            updated_parts.append(part)
+            normalized_parts.append(part)
 
     if not has_path:
-        updated_parts.append(f"Path={COOKIE_PATH}")
+        normalized_parts.append(f"Path={COOKIE_PATH}")
+    if not has_secure:
+        normalized_parts.append("Secure")
+    if not has_samesite:
+        normalized_parts.append("SameSite=None")
+    if not has_partitioned:
+        normalized_parts.append("Partitioned")
 
-    return "; ".join(updated_parts)
+    return "; ".join(normalized_parts)
 
 
 def add_partitioned_attribute_to_cookies(response):
@@ -57,15 +76,7 @@ def add_partitioned_attribute_to_cookies(response):
 
     response.headers.remove("Set-Cookie")
     for cookie in cookies:
-        lower_cookie = cookie.lower()
-        if "partitioned" not in lower_cookie:
-            if "secure" not in lower_cookie:
-                cookie = cookie + "; Secure"
-            if "samesite=" not in lower_cookie:
-                cookie = cookie + "; SameSite=None"
-            cookie = cookie + "; Partitioned"
-        cookie = set_cookie_path(cookie)
-        response.headers.add("Set-Cookie", cookie)
+        response.headers.add("Set-Cookie", normalize_cookie_for_iframe(cookie))
 
 
 class PartitionedSessionInterface(SecureCookieSessionInterface):
@@ -180,14 +191,12 @@ def login():
     if not target_link_uri:
         return launch_error('Missing "target_link_uri" param')
 
-    session["lti_login_started"] = uuid.uuid4().hex
-
     oidc_login = FlaskOIDCLogin(
         flask_request,
         tool_conf,
         launch_data_storage=get_launch_data_storage(),
     )
-    return oidc_login.redirect(target_link_uri)
+    return oidc_login.enable_check_cookies().redirect(target_link_uri)
 
 
 @app.route("/launch/", methods=["POST"])
