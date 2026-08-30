@@ -1,0 +1,188 @@
+\documentclass[12pt]{article}
+
+% Overleaf: set the compiler to pdfLaTeX and bibliography tool to Biber.
+% This template uses APA author-year citations through biblatex.
+
+\usepackage[letterpaper,margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{setspace}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{csquotes}
+\usepackage[
+  backend=biber,
+  style=apa,
+  sorting=nyt,
+  sortcites=true
+]{biblatex}
+
+\addbibresource{references.bib}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=blue
+}
+
+\setstretch{1.5}
+\setlist[itemize]{leftmargin=*, itemsep=0.25em}
+\setlist[enumerate]{leftmargin=*, itemsep=0.25em}
+
+\title{Research Proposal Title}
+\author{Your Name\\Department or Program\\Brock University}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Write a concise summary of the proposed project. In 150--250 words, identify
+the research problem, the central research question or hypothesis, the proposed
+method, and the expected contribution. Keep this focused on what the project
+will do, why it matters, and why it is feasible.
+\end{abstract}
+
+\section{Introduction}
+
+The introduction orients readers who may not already know the topic. Begin with
+a brief overview of the research area, then narrow toward the specific problem
+your project addresses.
+
+\subsection{Research Topic and Problem}
+
+Describe the topic and define the specific research problem. Be selective:
+include only the background needed to understand the proposal.
+
+\subsection{Research Question or Hypothesis}
+
+State the main research question, sub-question, or hypothesis clearly.
+
+\begin{quote}
+\textbf{Main research question:} Replace this sentence with one focused,
+researchable question.
+\end{quote}
+
+\subsection{Objectives}
+
+List the concrete objectives of the proposed project.
+
+\begin{enumerate}
+  \item Objective one.
+  \item Objective two.
+  \item Objective three.
+\end{enumerate}
+
+\subsection{Significance}
+
+Explain the expected contribution, impact, or importance of the project. This
+section should answer why this research should be done.
+
+\section{Literature Review}
+
+The literature review explains the scholarly conversation surrounding your
+topic. It should support the need for your research question or hypothesis.
+Avoid summarizing everything you have read; focus on the sources most relevant
+to your project.
+
+\subsection{Current Scholarly Conversation}
+
+Summarize the main areas of agreement in the literature. Use citations such as
+\textcite{sampleArticle} for narrative citation or \parencite{sampleBook} for
+parenthetical citation.
+
+\subsection{Debates, Conflicts, or Limitations}
+
+Identify important disagreements, limitations, or unresolved questions in
+existing research.
+
+\subsection{Gap and Connection to This Project}
+
+Explain the gap your project addresses and connect it directly to your research
+question or hypothesis. This section should make clear why your proposed project
+fits into the larger conversation.
+
+\section{Methodology}
+
+The methodology section explains how the project will answer the research
+question or test the hypothesis. It should justify both the method of data
+collection and the method of analysis.
+
+\subsection{Research Design}
+
+Describe the overall approach, such as qualitative, quantitative, mixed-methods,
+experimental, archival, textual, survey-based, interview-based, or another
+appropriate design.
+
+\subsection{Data Collection}
+
+Describe what data, texts, participants, observations, records, or materials
+will be collected. Explain why this type of evidence is appropriate for the
+research question.
+
+\subsection{Data Analysis}
+
+Describe how the collected material will be analyzed. Explain how this analysis
+will help answer the research question or test the hypothesis.
+
+\subsection{Justification of Method}
+
+Explain why the selected method is the best feasible approach. Address:
+
+\begin{itemize}
+  \item \textbf{Viability:} The project can be completed within available time,
+  resources, expertise, and budget.
+  \item \textbf{Reliability:} The approach has a track record or can be carried
+  out consistently.
+  \item \textbf{Validity:} The method produces evidence appropriate to the
+  research question.
+\end{itemize}
+
+\subsection{Ethical Considerations}
+
+If applicable, describe consent, privacy, confidentiality, data storage, risk,
+and research ethics board requirements. If ethics approval is not required,
+briefly explain why.
+
+\section{Timeline}
+
+Work backward from the planned completion date. Adjust the milestones below to
+match your program requirements and project scope.
+
+\begin{table}[h]
+\centering
+\caption{Proposed research timeline}
+\begin{tabular}{p{0.28\linewidth} p{0.25\linewidth} p{0.37\linewidth}}
+\toprule
+\textbf{Milestone} & \textbf{Target Date} & \textbf{Planned Work} \\
+\midrule
+Finalize research question & Month Year & Confirm scope with supervisor and revise proposal focus. \\
+Complete literature review & Month Year & Search, read, annotate, and synthesize key sources. \\
+Finalize methodology & Month Year & Confirm data collection and analysis plan. \\
+Collect data or materials & Month Year & Gather sources, observations, interviews, survey responses, or other evidence. \\
+Analyze data & Month Year & Apply selected analytical method and record findings. \\
+Draft chapters or report & Month Year & Write and revise major sections. \\
+Submit final project & Month Year & Complete final revisions, formatting, and submission. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Expected Contribution}
+
+Briefly state what this project is expected to contribute to the field,
+discipline, community, practice, or problem area. Connect the contribution back
+to the research gap and significance described earlier.
+
+\section{Conclusion}
+
+End by restating the focused purpose of the project, the value of the research,
+and the feasibility of the plan. Keep the conclusion brief.
+
+\printbibliography
+
+\end{document}
